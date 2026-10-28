@@ -8,7 +8,7 @@ const app = express();
 
 // 2. Definir los orígenes permitidos
 const allowedOrigins = [
-  'https://catalogonova.vercel.app/',
+  'https://catalogonova.vercel.app',
   'https://front-catalogo-nova.vercel.app', // Tu frontend desplegado
   'http://localhost:5173',                  // Desarrollo local (Vite)
   'http://localhost:3000'                   // Desarrollo local (React/Next)
