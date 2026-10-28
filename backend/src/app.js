@@ -6,14 +6,29 @@ import categoriaRoutes from './routes/categoria.routes.js';
 
 const app = express();
 
-// Middlewares
-app.use(helmet());
-app.use(cors({
-  origin: process.env.FRONTEND_URL || 'http://localhost:5173',
-  methods: ['GET'] // Al ser solo catálogo público, solo permitimos GET
-}));
-app.use(express.json());
+// 2. Definir los orígenes permitidos
+const allowedOrigins = [
+  'https://catalogonova.vercel.app/',
+  'https://front-catalogo-nova.vercel.app', // Tu frontend desplegado
+  'http://localhost:5173',                  // Desarrollo local (Vite)
+  'http://localhost:3000'                   // Desarrollo local (React/Next)
+];
 
+app.use(cors({
+  origin: function (origin, callback) {
+    // Permitir peticiones sin 'origin' (como Postman o curl) o si están en la lista
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Bloqueado por la política de CORS'));
+    }
+  },
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  credentials: true
+}));
+
+app.use(express.json());
 // Rutas
 app.use('/api/productos', productoRoutes);
 app.use('/api/categorias', categoriaRoutes);
